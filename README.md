@@ -252,7 +252,35 @@ dispatch_async(queue, ^{
 会开启新线程，但是因为任务是串行的，执行完一个任务，再执行下一个任务
 
 ```objective-c
-/** * 异步执行 + 串行队列 * 特点：会开启新线程，但是因为任务是串行的，执行完一个任务，再执行下一个任务。 */+ (void)asyncToSerial {    NSLog(@"currentThread---%@",[NSThread currentThread]);  // 打印当前线程    NSLog(@"asyncSerial---begin");        dispatch_queue_t queue = dispatch_queue_create("com.kk.testQueue", DISPATCH_QUEUE_SERIAL);        dispatch_async(queue, ^{        // 追加任务 1        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作        NSLog(@"1---%@",[NSThread currentThread]);      // 打印当前线程    });    dispatch_async(queue, ^{        // 追加任务 2        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作        NSLog(@"2---%@",[NSThread currentThread]);      // 打印当前线程    });    dispatch_async(queue, ^{        // 追加任务 3        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作        NSLog(@"3---%@",[NSThread currentThread]);      // 打印当前线程    });        NSLog(@"asyncSerial---end");}2021-07-26 21:21:00.778083+0800 GCD[2423:85536] currentThread---<NSThread: 0x6000033d8780>{number = 1, name = main}2021-07-26 21:21:00.778255+0800 GCD[2423:85536] asyncSerial---begin2021-07-26 21:21:00.778381+0800 GCD[2423:85536] asyncSerial---end2021-07-26 21:21:02.779482+0800 GCD[2423:85821] 1---<NSThread: 0x6000033f1740>{number = 6, name = (null)}2021-07-26 21:21:04.782653+0800 GCD[2423:85821] 2---<NSThread: 0x6000033f1740>{number = 6, name = (null)}2021-07-26 21:21:06.787764+0800 GCD[2423:85821] 3---<NSThread: 0x6000033f1740>{number = 6, name = (null)}
+/**
+ * 异步执行 + 串行队列
+ * 特点：会开启新线程，但是因为任务是串行的，执行完一个任务，再执行下一个任务。
+ */
++ (void)asyncToSerial {
+    NSLog(@"currentThread---%@",[NSThread currentThread]);  // 打印当前线程
+    NSLog(@"asyncSerial---begin");
+    
+    dispatch_queue_t queue = dispatch_queue_create("com.kk.testQueue", DISPATCH_QUEUE_SERIAL);
+    
+    dispatch_async(queue, ^{
+        // 追加任务 1
+        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作
+        NSLog(@"1---%@",[NSThread currentThread]);      // 打印当前线程
+    });
+    dispatch_async(queue, ^{
+        // 追加任务 2
+        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作
+        NSLog(@"2---%@",[NSThread currentThread]);      // 打印当前线程
+    });
+    dispatch_async(queue, ^{
+        // 追加任务 3
+        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作
+        NSLog(@"3---%@",[NSThread currentThread]);      // 打印当前线程
+    });
+    
+    NSLog(@"asyncSerial---end");
+}
+                                                                                    2021-07-26 21:21:00.778083+0800 GCD[2423:85536] currentThread---<NSThread: 0x6000033d8780>{number = 1, name = main}                                                                                    2021-07-26 21:21:00.778255+0800 GCD[2423:85536] asyncSerial---begin                                                                                      2021-07-26 21:21:00.778381+0800 GCD[2423:85536] asyncSerial---end                                                                                      2021-07-26 21:21:02.779482+0800 GCD[2423:85821] 1---<NSThread: 0x6000033f1740>{number = 6, name = (null)}                                                                                    2021-07-26 21:21:04.782653+0800 GCD[2423:85821] 2---<NSThread: 0x6000033f1740>{number = 6, name = (null)}                                                                                    2021-07-26 21:21:06.787764+0800 GCD[2423:85821] 3---<NSThread: 0x6000033f1740>{number = 6, name = (null)}
 ```
 
 ### 异步执行 + 并发队列
@@ -260,13 +288,85 @@ dispatch_async(queue, ^{
 可以开启多个线程，任务交替（同时）执行
 
 ```objective-c
-/** * 异步执行 + 并发队列 * 特点：可以开启多个线程，任务交替（同时）执行。 */+ (void)asyncToConcurrent {    NSLog(@"currentThread---%@",[NSThread currentThread]);  // 打印当前线程    NSLog(@"asyncConcurrent---begin");        dispatch_queue_t queue = dispatch_queue_create("com.kk.testQueue", DISPATCH_QUEUE_CONCURRENT);        dispatch_async(queue, ^{        // 追加任务 1        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作        NSLog(@"1---%@",[NSThread currentThread]);      // 打印当前线程    });        dispatch_async(queue, ^{        // 追加任务 2        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作        NSLog(@"2---%@",[NSThread currentThread]);      // 打印当前线程    });        dispatch_async(queue, ^{        // 追加任务 3        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作        NSLog(@"3---%@",[NSThread currentThread]);      // 打印当前线程    });        NSLog(@"asyncConcurrent---end");}2021-07-26 21:24:35.537538+0800 GCD[2476:88726] currentThread---<NSThread: 0x6000001405c0>{number = 1, name = main}2021-07-26 21:24:35.537729+0800 GCD[2476:88726] asyncConcurrent---begin2021-07-26 21:24:35.537935+0800 GCD[2476:88726] asyncConcurrent---end2021-07-26 21:24:37.540399+0800 GCD[2476:88840] 3---<NSThread: 0x600000104f40>{number = 5, name = (null)}2021-07-26 21:24:37.540399+0800 GCD[2476:88846] 2---<NSThread: 0x600000108380>{number = 3, name = (null)}2021-07-26 21:24:37.540401+0800 GCD[2476:88843] 1---<NSThread: 0x60000014bf00>{number = 7, name = (null)}
+/**
+ * 异步执行 + 并发队列
+ * 特点：可以开启多个线程，任务交替（同时）执行。
+ */
++ (void)asyncToConcurrent {
+    NSLog(@"currentThread---%@",[NSThread currentThread]);  // 打印当前线程
+    NSLog(@"asyncConcurrent---begin");
+    
+    dispatch_queue_t queue = dispatch_queue_create("com.kk.testQueue", DISPATCH_QUEUE_CONCURRENT);
+    
+    dispatch_async(queue, ^{
+        // 追加任务 1
+        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作
+        NSLog(@"1---%@",[NSThread currentThread]);      // 打印当前线程
+    });
+    
+    dispatch_async(queue, ^{
+        // 追加任务 2
+        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作
+        NSLog(@"2---%@",[NSThread currentThread]);      // 打印当前线程
+    });
+    
+    dispatch_async(queue, ^{
+        // 追加任务 3
+        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作
+        NSLog(@"3---%@",[NSThread currentThread]);      // 打印当前线程
+    });
+    
+    NSLog(@"asyncConcurrent---end");
+}        
+
+2021-07-26 21:24:35.537538+0800 GCD[2476:88726] currentThread---<NSThread: 0x6000001405c0>{number = 1, name = main}
+2021-07-26 21:24:35.537729+0800 GCD[2476:88726] asyncConcurrent---begin
+2021-07-26 21:24:35.537935+0800 GCD[2476:88726] asyncConcurrent---end
+2021-07-26 21:24:37.540399+0800 GCD[2476:88840] 3---<NSThread: 0x600000104f40>{number = 5, name = (null)}
+2021-07-26 21:24:37.540399+0800 GCD[2476:88846] 2---<NSThread: 0x600000108380>{number = 3, name = (null)}
+2021-07-26 21:24:37.540401+0800 GCD[2476:88843] 1---<NSThread: 0x60000014bf00>{number = 7, name = (null)}
 ```
 
 ### 异步执行 + 主队列
 
 ```objective-c
-/** * 异步执行 + 主队列 * 特点：只在主线程中执行任务，执行完一个任务，再执行下一个任务 */+ (void)asyncToMain {    NSLog(@"currentThread---%@",[NSThread currentThread]);  // 打印当前线程    NSLog(@"asyncMain---begin");        dispatch_queue_t queue = dispatch_get_main_queue();        dispatch_async(queue, ^{        // 追加任务 1        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作        NSLog(@"1---%@",[NSThread currentThread]);      // 打印当前线程    });        dispatch_async(queue, ^{        // 追加任务 2        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作        NSLog(@"2---%@",[NSThread currentThread]);      // 打印当前线程    });        dispatch_async(queue, ^{        // 追加任务 3        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作        NSLog(@"3---%@",[NSThread currentThread]);      // 打印当前线程    });        NSLog(@"asyncMain---end");}2021-07-26 21:32:25.068658+0800 GCD[2565:93879] currentThread---<NSThread: 0x60000110c580>{number = 1, name = main}2021-07-26 21:32:25.068782+0800 GCD[2565:93879] asyncMain---begin2021-07-26 21:32:25.068905+0800 GCD[2565:93879] asyncMain---end2021-07-26 21:32:27.083046+0800 GCD[2565:93879] 1---<NSThread: 0x60000110c580>{number = 1, name = main}2021-07-26 21:32:29.084549+0800 GCD[2565:93879] 2---<NSThread: 0x60000110c580>{number = 1, name = main}2021-07-26 21:32:31.086077+0800 GCD[2565:93879] 3---<NSThread: 0x60000110c580>{number = 1, name = main}
+/**
+ * 异步执行 + 主队列
+ * 特点：只在主线程中执行任务，执行完一个任务，再执行下一个任务
+ */
++ (void)asyncToMain {
+    NSLog(@"currentThread---%@",[NSThread currentThread]);  // 打印当前线程
+    NSLog(@"asyncMain---begin");
+    
+    dispatch_queue_t queue = dispatch_get_main_queue();
+    
+    dispatch_async(queue, ^{
+        // 追加任务 1
+        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作
+        NSLog(@"1---%@",[NSThread currentThread]);      // 打印当前线程
+    });
+    
+    dispatch_async(queue, ^{
+        // 追加任务 2
+        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作
+        NSLog(@"2---%@",[NSThread currentThread]);      // 打印当前线程
+    });
+    
+    dispatch_async(queue, ^{
+        // 追加任务 3
+        [NSThread sleepForTimeInterval:2];              // 模拟耗时操作
+        NSLog(@"3---%@",[NSThread currentThread]);      // 打印当前线程
+    });
+    
+    NSLog(@"asyncMain---end");
+}
+                                                                         
+2021-07-26 21:32:25.068658+0800 GCD[2565:93879] currentThread---<NSThread: 0x60000110c580>{number = 1, name = main}
+2021-07-26 21:32:25.068782+0800 GCD[2565:93879] asyncMain---begin
+2021-07-26 21:32:25.068905+0800 GCD[2565:93879] asyncMain---end
+2021-07-26 21:32:27.083046+0800 GCD[2565:93879] 1---<NSThread: 0x60000110c580>{number = 1, name = main}
+2021-07-26 21:32:29.084549+0800 GCD[2565:93879] 2---<NSThread: 0x60000110c580>{number = 1, name = main}
+2021-07-26 21:32:31.086077+0800 GCD[2565:93879] 3---<NSThread: 0x60000110c580>{number = 1, name = main}
 ```
 
 ### 小结
