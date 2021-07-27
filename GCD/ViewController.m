@@ -7,6 +7,7 @@
 
 #import "ViewController.h"
 #import "GCDTaskAndQueue.h"
+#import "GCDAPI.h"
 
 @interface ViewController ()
 
@@ -33,7 +34,15 @@
 //    [NSThread detachNewThreadSelector:@selector(asyncToSerial) toTarget:[GCDTaskAndQueue class] withObject:nil];
 //    [NSThread detachNewThreadSelector:@selector(asyncToConcurrent) toTarget:[GCDTaskAndQueue class] withObject:nil];
 //    [NSThread detachNewThreadSelector:@selector(asyncToMain) toTarget:[GCDTaskAndQueue class] withObject:nil];
+    
+    // GCD其他方法
+//    [GCDAPI barrier];
+//    [GCDAPI after];
+//    [GCDAPI apply];
+//    [GCDAPI groupNotify];
+//    [GCDAPI groupWait];
+//    [GCDAPI groupEnterAndLeave];
+//    [GCDAPI semaphoreSync];
 }
-
 
 @end
