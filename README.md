@@ -315,7 +315,8 @@ dispatch_async(queue, ^{
 }
 
 2021-07-26 21:21:00.778083+0800 GCD[2423:85536] currentThread---<NSThread: 0x6000033d8780>{number = 1, name = main}
-2021-07-26 21:21:00.778255+0800 GCD[2423:85536] asyncSerial---begin                                                 2021-07-26 21:21:00.778381+0800 GCD[2423:85536] asyncSerial---end                                                 2021-07-26 21:21:02.779482+0800 GCD[2423:85821] 1---<NSThread: 0x6000033f1740>{number = 6, name = (null)}
+2021-07-26 21:21:00.778255+0800 GCD[2423:85536] asyncSerial---begin                                                 2021-07-26 21:21:00.778381+0800 GCD[2423:85536] asyncSerial---end
+2021-07-26 21:21:02.779482+0800 GCD[2423:85821] 1---<NSThread: 0x6000033f1740>{number = 6, name = (null)}
 2021-07-26 21:21:04.782653+0800 GCD[2423:85821] 2---<NSThread: 0x6000033f1740>{number = 6, name = (null)}
 2021-07-26 21:21:06.787764+0800 GCD[2423:85821] 3---<NSThread: 0x6000033f1740>{number = 6, name = (null)}
 ```
